@@ -45,7 +45,7 @@ func SimulateDevCycle(t *testing.T, kubectlCLI *kubectl.CLI, namespace string, l
 		Name:      "leeroy-web",
 		Namespace: namespace,
 		Port:      schemautil.FromInt(8080),
-	}, "", "dummy container", "", "", localPort, false)
+	}, "", "dummy container", "", "", localPort, true)
 	defer em.Stop()
 	em.forwardPortForwardEntry(ctx, os.Stdout, pfe)
 	em.Stop()
