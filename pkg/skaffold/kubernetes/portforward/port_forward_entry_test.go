@@ -38,7 +38,7 @@ func TestPortForwardEntryKey(t *testing.T) {
 				Name:      "podName",
 				Namespace: "default",
 				Port:      schemautil.FromInt(8080),
-			}, "", "", "", "", 0, false),
+			}, "", "", "", "", 0, true),
 			expected: "pod-podName-default-8080",
 		}, {
 			description: "entry for deploy",
@@ -47,7 +47,7 @@ func TestPortForwardEntryKey(t *testing.T) {
 				Name:      "depName",
 				Namespace: "namespace",
 				Port:      schemautil.FromInt(9000),
-			}, "", "", "", "", 0, false),
+			}, "", "", "", "", 0, true),
 			expected: "deployment-depName-namespace-9000",
 		}, {
 			description: "entry for deployment with capital normalization",
@@ -56,7 +56,7 @@ func TestPortForwardEntryKey(t *testing.T) {
 				Name:      "depName",
 				Namespace: "namespace",
 				Port:      schemautil.FromInt(9000),
-			}, "", "", "", "", 0, false),
+			}, "", "", "", "", 0, true),
 			expected: "deployment-depName-namespace-9000",
 		},
 	}

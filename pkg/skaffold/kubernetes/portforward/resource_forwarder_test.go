@@ -166,7 +166,7 @@ func TestGetCurrentEntryFunc(t *testing.T) {
 			},
 			availablePorts: []int{8080},
 			expectedReq:    8080,
-			expected:       newPortForwardEntry(0, latest.PortForwardResource{}, "", "", "", "", 8080, false),
+			expected:       newPortForwardEntry(0, latest.PortForwardResource{}, "", "", "", "", 8080, true),
 		}, {
 			description: "should not request system ports (1-1023)",
 			resource: latest.PortForwardResource{
@@ -176,7 +176,7 @@ func TestGetCurrentEntryFunc(t *testing.T) {
 			},
 			availablePorts: []int{8080},
 			expectedReq:    0, // no local port requested as port 80 is a system port
-			expected:       newPortForwardEntry(0, latest.PortForwardResource{}, "", "", "", "", 8080, false),
+			expected:       newPortForwardEntry(0, latest.PortForwardResource{}, "", "", "", "", 8080, true),
 		}, {
 			description: "port forward existing deployment",
 			resource: latest.PortForwardResource{
@@ -197,7 +197,7 @@ func TestGetCurrentEntryFunc(t *testing.T) {
 				},
 			},
 			expectedReq: -1, // retrieveAvailablePort should not be called as there is an assigned localPort
-			expected:    newPortForwardEntry(0, latest.PortForwardResource{}, "", "", "", "", 9000, false),
+			expected:    newPortForwardEntry(0, latest.PortForwardResource{}, "", "", "", "", 9000, true),
 		},
 	}
 
