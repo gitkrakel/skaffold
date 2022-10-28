@@ -108,7 +108,7 @@ func (k *KubectlForwarder) forward(ctx context.Context, pfe *portForwardEntry, e
 	for {
 		pfe.terminationLock.Lock()
 		if pfe.terminated {
-			log.Entry(ctx).Debugf("port forwarding %v was cancelled...", pfe)
+			output.Red.Fprintf(k.out, "port forwarding %v was cancelled...", pfe)
 			pfe.terminationLock.Unlock()
 			errChan <- nil
 			return
@@ -116,8 +116,21 @@ func (k *KubectlForwarder) forward(ctx context.Context, pfe *portForwardEntry, e
 		pfe.terminationLock.Unlock()
 
 		if !isPortFree(util.Loopback, pfe.localPort) {
-			// Assuming that Skaffold brokered ports don't overlap, this has to be an external process that started
-			// since the dev loop kicked off. We are notifying the user in the hope that they can fix it
+			pfe.terminationLock.Lock()
+			if pfe.cancel != nil {
+				// We use cancel() here instead of Terminate so that pfe.terminated is not set
+				output.Red.Fprintf(k.out, "failed to port forward %v, port %d is taken, terminating kubectl as workaround and retrying...\n", pfe, pfe.localPort)
+				pfe.cancel()
+				pfe.terminationLock.Unlock()
+				if notifiedUser {
+					time.Sleep(waitPortNotFree)
+				} else {
+					time.Sleep(500 * time.Millisecond)
+				}
+				notifiedUser = true
+				continue
+			}
+			pfe.terminationLock.Unlock()
 			output.Red.Fprintf(k.out, "failed to port forward %v, port %d is taken, retrying...\n", pfe, pfe.localPort)
 			notifiedUser = true
 			time.Sleep(waitPortNotFree)
