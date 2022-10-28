@@ -14,6 +14,7 @@ replace (
 
 	// TODO(halvards) Pin to match other k8s.io modules. Necessary since ko is on a later version.
 	k8s.io/apimachinery => k8s.io/apimachinery v0.21.6
+	k8s.io/client-go => github.com/gitkrakel/k8s-client-go v0.21.6-disable-client-throttling
 )
 
 // TODO(bdealwis)[10/07/2021] CVE-2021-30465: pin github.com/opencontainers/runc v1.0.2

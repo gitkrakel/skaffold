@@ -106,34 +106,10 @@ func GetAvailablePort(address string, port int, usedPorts *PortSet) int {
 			log.Entry(context.TODO()).Debugf("found open port: %d", port)
 			return port
 		}
-
-		// try the next 10 ports after the provided one
-		for i := 0; i < 10; i++ {
-			port++
-			if getPortIfAvailable(address, port, usedPorts) {
-				log.Entry(context.TODO()).Debugf("found open port: %d", port)
-				return port
-			}
-		}
+		return port
 	}
 
-	for port = 4503; port <= 4533; port++ {
-		if getPortIfAvailable(address, port, usedPorts) {
-			log.Entry(context.TODO()).Debugf("found open port: %d", port)
-			return port
-		}
-	}
-
-	l, err := net.Listen("tcp", fmt.Sprintf("%s:0", address))
-	if err != nil {
-		return -1
-	}
-
-	p := l.Addr().(*net.TCPAddr).Port
-
-	usedPorts.Set(p)
-	l.Close()
-	return p
+	return -1
 }
 
 func getPortIfAvailable(address string, p int, usedPorts *PortSet) bool {
